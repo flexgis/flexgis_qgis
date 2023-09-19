@@ -173,6 +173,12 @@ class FlexgisQGIS:
             self.iface.addPluginToWebMenu(
                 self.menu,
                 action)
+            self.iface.addPluginToVectorMenu(
+                self.menu,
+                action)
+            self.iface.addPluginToRasterMenu(
+                self.menu,
+                action)
 
         self.actions.append(action)
 
@@ -195,6 +201,12 @@ class FlexgisQGIS:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginWebMenu(
+                self.tr(u'&FlexGIS'),
+                action)
+            self.iface.removePluginVectorMenu(
+                self.tr(u'&FlexGIS'),
+                action)
+            self.iface.removePluginRasterMenu(
                 self.tr(u'&FlexGIS'),
                 action)
             self.iface.removeToolBarIcon(action)
