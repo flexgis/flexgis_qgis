@@ -1,6 +1,6 @@
 import os
 from qgis.PyQt.QtWidgets import QMessageBox
-from qgis.core import QgsMapLayerProxyModel
+from qgis.core import QgsMapLayerProxyModel, QgsRasterLayer
 
 # upload layer button
 def _add_layer(self):
@@ -19,7 +19,7 @@ def _add_layer(self):
         isSelected = self.dlg_add_layer.checkBox_selected.isChecked()
         layer_to_add = self.dlg_add_layer.map_layers_cb.currentLayer()
 
-        if layer_to_add.type().name == "Raster":
+        if isinstance(layer_to_add, QgsRasterLayer):
             # upload raster
             self.layerCopyPath_add = layer_to_add.dataProvider().dataSourceUri()
             data_type = "raster"
@@ -38,7 +38,6 @@ def _add_layer(self):
                 "options": '{}',
                 "file": (os.path.basename(self.layerCopyPath_add), open(self.layerCopyPath_add, 'rb'), 'application/octet-stream')
             }
-            print(req_body)
 
         try:
             req_add_layers = self.api.create_layer(req_body)
@@ -60,8 +59,8 @@ def _add_layer(self):
             msg.setWindowTitle("Ошибка загрузки слоя")
             msg.setStandardButtons(QMessageBox.Ok)
             returnValue = msg.exec()
-
-        self._clear_folder(self.folderCopyPath_add)
+        if data_type == "gpkg":
+            self._clear_folder(self.folderCopyPath_add)
     else:
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)

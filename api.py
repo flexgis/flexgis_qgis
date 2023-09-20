@@ -40,7 +40,6 @@ class ApiClient:
         if custom_headers is not None:
             headers = {**headers, **custom_headers} 
 
-        print(headers)
         response = requests.request(method, url, data=data, params=params, headers=headers)
 
         if response.status_code == 204:

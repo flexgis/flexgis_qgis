@@ -1,6 +1,6 @@
 import os
 from qgis.PyQt.QtWidgets import QAction, QTableWidgetItem, QHeaderView, QAbstractItemView, QMessageBox
-
+from qgis.core import QgsRasterLayer
 
 # update button
 def _edit_layer(self):
@@ -41,7 +41,7 @@ def _edit_layer(self):
         if self.dlg_edit_layer.map_layers_cb.currentLayer() != None:
             isSelected = self.dlg_edit_layer.checkBox_selected.isChecked()
             layer_to_add = self.dlg_edit_layer.map_layers_cb.currentLayer()
-            if layer_to_add.type().name == "Raster":
+            if isinstance(layer_to_add, QgsRasterLayer):
                 # upload raster
                 self.layerCopyPath_add = layer_to_add.dataProvider().dataSourceUri()
                 data_type = "raster"
@@ -83,7 +83,8 @@ def _edit_layer(self):
         msg.setWindowTitle("Ошибка обновления слоя")
         msg.setStandardButtons(QMessageBox.Ok)
         returnValue = msg.exec()
-    self._clear_folder(self.folderCopyPath_add)
+    if data_type == "gpkg":
+        self._clear_folder(self.folderCopyPath_add)
 
 
 # edit layer button

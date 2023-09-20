@@ -45,8 +45,7 @@ def _log_in(self):
                 'icons',
                 'FQ_add.png',
                 )
-        print('imgPath_add')
-        print(imgPath_add)
+
         self.dlg_layers.button_add.setIcon(QIcon(imgPath_add))
         self.dlg_layers.button_add.setIconSize(QSize(25, 25))
 
@@ -103,7 +102,6 @@ def _logout_click(self):
     """
     Logout user
     """
-    print('_logout_click(self)')
     self.connect_hyperlinks()
     try:
         self.dlg.sign_up_button.clicked.disconnect(self._sign_up)
@@ -114,7 +112,7 @@ def _logout_click(self):
     self.dlg.log_in_button.clicked.connect(self._log_in)
     # user logout
     self.dlg_layers.close()
-    print('self.dlg_layers.close()')
+
     self.dlg.show()
 
 

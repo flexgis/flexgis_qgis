@@ -6,8 +6,13 @@ from qgis.core import QgsVectorFileWriter, QgsCoordinateTransformContext, QgsWkb
 # create geopackage
 def _create_gpkg_from_layer(self, lyr, isSelected):
     layer_source = lyr.dataProvider().dataSourceUri()
-
-    (dirLayer, nameLayer) = os.path.split(layer_source)
+    if lyr.isTemporary():
+        try:
+            dirLayer = os.environ['TMP']
+        except:
+            dirLayer = os.environ['TMPDIR']
+    else:
+        (dirLayer, nameLayer) = os.path.split(layer_source)
     self.layerCopyPath_add = os.path.join(
         dirLayer,
         'flexgis_temp_layers',
