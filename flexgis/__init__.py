@@ -28,6 +28,7 @@ from ..constants import (
     PRIVACY_POLICY_URL,
     TOS_URL
 )
+from qgis.core import QgsRasterLayer
 
 
 from .. import resources
@@ -239,21 +240,27 @@ class FlexgisQGIS:
 
     # is raster lyr for add dialog
     def _is_raster_lyr(self):
-        if self.dlg_add_layer.map_layers_cb.currentLayer().type().name == "Raster":
-            if self.dlg_add_layer.checkBox_selected.isChecked():
-                self.dlg_add_layer.checkBox_selected.setChecked(False)
-            self.dlg_add_layer.checkBox_selected.setEnabled(False)
+        if self.dlg_add_layer.map_layers_cb.currentLayer():
+            if isinstance(self.dlg_add_layer.map_layers_cb.currentLayer(), QgsRasterLayer):
+                if self.dlg_add_layer.checkBox_selected.isChecked():
+                    self.dlg_add_layer.checkBox_selected.setChecked(False)
+                self.dlg_add_layer.checkBox_selected.setEnabled(False)
+            else:
+                self.dlg_add_layer.checkBox_selected.setEnabled(True)
         else:
-            self.dlg_add_layer.checkBox_selected.setEnabled(True)
+            self.dlg_add_layer.checkBox_selected.setEnabled(False)
 
     # is raster lyr for edit dialog
     def _is_raster_lyr_edit(self):
-        if self.dlg_edit_layer.map_layers_cb.currentLayer().type().name == "Raster":
-            if self.dlg_edit_layer.checkBox_selected.isChecked():
-                self.dlg_edit_layer.checkBox_selected.setChecked(False)
-            self.dlg_edit_layer.checkBox_selected.setEnabled(False)
+        if self.dlg_edit_layer.map_layers_cb.currentLayer():
+            if isinstance(self.dlg_edit_layer.map_layers_cb.currentLayer(), QgsRasterLayer):
+                if self.dlg_edit_layer.checkBox_selected.isChecked():
+                    self.dlg_edit_layer.checkBox_selected.setChecked(False)
+                self.dlg_edit_layer.checkBox_selected.setEnabled(False)
+            else:
+                self.dlg_edit_layer.checkBox_selected.setEnabled(True)
         else:
-            self.dlg_edit_layer.checkBox_selected.setEnabled(True)
+            self.dlg_edit_layer.checkBox_selected.setEnabled(False)
 
     # update geometry checkbox
     def _edit_geom(self):
