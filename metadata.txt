@@ -6,7 +6,7 @@
 name=FlexGIS
 qgisMinimumVersion=3.22
 description=Manage your FlexGIS data
-version=0.2
+version=0.1
 author=FlexGIS
 email=info@flexgis.ru
 
