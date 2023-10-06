@@ -28,7 +28,7 @@ from pathlib import Path
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 from PyQt5.QtGui import QPixmap, QIcon
-
+from sys import platform
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 root_path = Path(__file__).parents[1]
@@ -54,7 +54,10 @@ class FlexgisQGISDialogEditLayer(QtWidgets.QDialog, FORM_CLASS):
         wtPixmap = QPixmap(imgPath_logo_mini)
         icon.addPixmap(wtPixmap)
         self.setWindowIcon(icon)
-        # self.setStyleSheet('background-color: #ececec; color: black;')
+        if platform == "win32":
+            self.setStyleSheet('QCheckBox{font-size:9pt; font-family:"Arial";} QCheckBox#checkBox_selected{font-size:7pt; font-family:"Arial";} QLabel{font-size:7pt; font-family:"Arial";}')
+        else:
+            self.setStyleSheet('QCheckBox{font-size:15pt; font-family:"Arial";} QCheckBox#checkBox_selected{font-size:13pt; font-family:"Arial";} QLabel{font-size:13pt; font-family:"Arial";}')
         #print(__file__)
         
         self.setupUi(self)
