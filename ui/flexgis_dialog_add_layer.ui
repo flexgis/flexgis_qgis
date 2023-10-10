@@ -25,6 +25,11 @@
     <height>430</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>FlexGIS - Add data</string>
   </property>
@@ -64,6 +69,11 @@
      <width>16777215</width>
      <height>20</height>
     </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>

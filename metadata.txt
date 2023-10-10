@@ -4,7 +4,7 @@
 
 [general]
 name=FlexGIS
-qgisMinimumVersion=3.22
+qgisMinimumVersion=3.16
 description=Manage your FlexGIS data
 version=0.1
 author=FlexGIS
@@ -12,8 +12,8 @@ email=info@flexgis.ru
 
 about=This plugin allows to export layers from QGIS to FlexGIS web platform for easier creating and sharing web maps with colleagues.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/flexgis/flexgis_qgis/issues
+repository=https://github.com/flexgis/flexgis_qgis
 # End of mandatory metadata
 
 # Recommended items:
@@ -25,7 +25,7 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=flexgis,web
 
-homepage=http://homepage
+homepage=https://github.com/flexgis/flexgis_qgis
 category=Web
 icon=icon.png
 # experimental flag

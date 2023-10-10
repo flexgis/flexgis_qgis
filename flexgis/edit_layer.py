@@ -9,6 +9,7 @@ def _edit_layer(self):
     lid = user_layer["id"]
     url_edit_layer = '/api/user_layers/' + lid + "/"
 
+    data_type = ""
     req_body = {}
 
     if self.dlg_edit_layer.checkBox_update_meta.isChecked():

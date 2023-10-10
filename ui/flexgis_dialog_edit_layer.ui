@@ -280,6 +280,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>15</pointsize>
     </font>
    </property>
@@ -304,6 +305,7 @@
    </property>
    <property name="font">
     <font>
+     <family>Arial</family>
      <pointsize>15</pointsize>
     </font>
    </property>
