@@ -21,4 +21,12 @@ def _del_click(self):
 # remove layer
 def _delete_layers(self, lid: str):
     url_del_layers = '/api/user_layers/' + lid
-    del_response = self.api.delete(url_del_layers)
+    try:
+        del_response = self.api.delete(url_del_layers)
+    except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(str(e))
+            msg.setWindowTitle("Ошибка удаления слоя")
+            msg.setStandardButtons(QMessageBox.Ok)
+            returnValue = msg.exec()
