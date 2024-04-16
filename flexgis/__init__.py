@@ -245,10 +245,15 @@ class FlexgisQGIS:
                 if self.dlg_add_layer.checkBox_selected.isChecked():
                     self.dlg_add_layer.checkBox_selected.setChecked(False)
                 self.dlg_add_layer.checkBox_selected.setEnabled(False)
+                if self.dlg_add_layer.checkBox_style.isChecked():
+                    self.dlg_add_layer.checkBox_style.setChecked(False)
+                self.dlg_add_layer.checkBox_style.setEnabled(False)
             else:
                 self.dlg_add_layer.checkBox_selected.setEnabled(True)
+                self.dlg_add_layer.checkBox_style.setEnabled(True)
         else:
             self.dlg_add_layer.checkBox_selected.setEnabled(False)
+            self.dlg_add_layer.checkBox_style.setEnabled(False)
 
     # is raster lyr for edit dialog
     def _is_raster_lyr_edit(self):

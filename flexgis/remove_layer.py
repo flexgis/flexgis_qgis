@@ -18,6 +18,7 @@ def _del_click(self):
             self._delete_layers(lyr_id)
         self._refresh_click()
 
+
 # remove layer
 def _delete_layers(self, lid: str):
     url_del_layers = '/api/user_layers/' + lid
