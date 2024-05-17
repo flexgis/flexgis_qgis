@@ -33,7 +33,7 @@ def _add_layer(self):
             import json
             url_add_layer = '/api/load/user_data/'
 
-            styleDict = {"singleSymbol": "CommonSymbol", "categorizedSymbol":"ByAttribute","graduatedSymbol":"ByAttribute", "Circle":"circle", "Square":"square"}
+            styleDict = {"singleSymbol": "CommonSymbol", "categorizedSymbol":"ByAttribute","graduatedSymbol":"ByAttribute", "RuleRenderer":"ByAttribute", "Circle":"circle", "Square":"square"}
             styleSttings = {}
             if isStyled and data_type != "raster":
                 import urllib.parse
@@ -208,6 +208,72 @@ def _add_layer(self):
                             ran_values.append({"type": "Range","id":str(uuid.uuid4()),"minValue": f"{min_value}","maxValue": f"{max_value}", "alias": ran_alias, "symbol": {"stroke": ran_symbol_stroke, "fill": ran_symbol_fill, "image":ran_symbol_image}})
                         def_type = {"stroke": {	"width": 1,	"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}},"image": {"size": 15,"type": "circle","imageString": "data:image/svg+xml;utf8,%3Csvg%20height%3D%2215%22%20width%3D%2215%22%20viewBox%3D%220%200%2015%2015%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%227.5%22%20r%3D%227%22%20stroke%3D%22%23000000%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%22%22%20fill%3D%22%23869be4%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E"}}
                         styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": ran_field, "symbolValueType": "Range", "values": ran_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
+                    elif lyr_style_type ==  "RuleRenderer":
+                        rr_field = "_id"
+                        rr_values = []
+                        root_rule = rend.rootRule()
+                        all_rules = root_rule.children()
+                        all_symbols = root_rule.symbols()
+                        for i in range(len(all_rules)):
+                            exp = all_rules[i].filterExpression()
+                            rule_features = layer_to_add.getFeatures(exp)
+                            f_index = 0
+                            for f in rule_features:
+                                rfl = True
+                                if f_index == 0:
+                                    rfl = False
+                                rr_value = f.id()
+                                rr_symbol = all_symbols[i].symbolLayers()[0]
+                                rr_symbol_fill = {"color": {"r": rr_symbol.color().red(),"g": rr_symbol.color().green(),"b": rr_symbol.color().blue(),"a": rr_symbol.color().alpha()/255.0}}
+                                rr_symbol_stroke =  {"width": rr_symbol.strokeWidth(), "color": { "a": rr_symbol.strokeColor().alpha()/255.0, "r": rr_symbol.strokeColor().red(), "g": rr_symbol.strokeColor().green(), "b": rr_symbol.strokeColor().blue() }}
+                                name = rr_symbol.properties()["name"]
+                                if name[-4:] == ".svg":
+                                    rr_symbol_image_type = "circle"
+                                    string_svg = ""
+                                    with open(name,"r") as inSVG:
+                                        for l in inSVG.readlines():
+                                            string_svg+=l.replace("\n","").replace('fill="param(fill)"', f'fill="{rr_symbol.color().name()}"').replace('stroke="param(outline)"', f'stroke="{rr_symbol.strokeColor().name()}"')
+                                    string_svg = re.sub(r'height=\"\d*?.\d*"',f'height="{rr_symbol.size()+10}"', string_svg ) 
+                                    string_svg = re.sub(r' width=\"\d*?.\d*"',f' width="{rr_symbol.size()+10}"', string_svg )
+                                elif name == 'square':
+                                    rr_symbol_image_type = "square"
+                                    string_svg = '<svg width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="28" height="28" fill="#8d5a99" stroke="#232323" stroke-width="0" stroke-dasharray=""></rect></svg>'
+                                    string_svg = re.sub(r' width=\"\d*?.\d*"',f' width="{rr_symbol.size()+10}"', string_svg ) 
+                                    string_svg = re.sub(r'height=\"\d*?.\d*"',f'height="{rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'fill=\"#.*?"',f'fill="{rr_symbol.color().name()}"', string_svg ) 
+                                    string_svg = re.sub(r'stroke=\"#.*?"',f'stroke="{rr_symbol.strokeColor().name()}"', string_svg ) 
+                                elif name == 'diamond':
+                                    rr_symbol_image_type = "Rhomb"
+                                    string_svg = '<svg height="25" width="25" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0.707107 12L12 0.707107L23.2929 12L12 23.2929L0.707107 12Z" fill="#869be4" stroke="#000000" stroke-width="1"></path></svg>'
+                                    string_svg = re.sub(r' width=\"\d*?.\d*"',f' width="{rr_symbol.size()+10}"', string_svg ) 
+                                    string_svg = re.sub(r'height=\"\d*?.\d*"',f'height="{rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'fill=\"#.*?"',f'fill="{rr_symbol.color().name()}"', string_svg ) 
+                                    string_svg = re.sub(r'stroke=\"#.*?"',f'stroke="{rr_symbol.strokeColor().name()}"', string_svg ) 
+                                elif name == 'triangle':
+                                    rr_symbol_image_type = "Triangle"
+                                    string_svg = '<svg height="28" width="28" viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.649994L0 21.35H24L12 0.649994Z" fill="#869be4" stroke="#000000" stroke-width="1"></path></svg>'
+                                    string_svg = re.sub(r' width=\"\d*?.\d*"',f' width="{rr_symbol.size()+10}"', string_svg ) 
+                                    string_svg = re.sub(r'height=\"\d*?.\d*"',f'height="{rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'fill=\"#.*?"',f'fill="{rr_symbol.color().name()}"', string_svg ) 
+                                    string_svg = re.sub(r'stroke=\"#.*?"',f'stroke="{rr_symbol.strokeColor().name()}"', string_svg ) 
+                                else: #circle
+                                    rr_symbol_image_type = "circle"
+                                    string_svg = '<svg height="10" width="10" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="5" r="4.5" stroke="#000000" stroke-width="1" stroke-dasharray="" fill="#fff5f0"></circle></svg>'
+                                    string_svg = re.sub(r' width=\"\d*?.\d*"',f' width="{rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'height=\"\d*?.\d*"',f'height="{rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'viewBox=\".*?"',f'viewBox="0 0 {rr_symbol.size()+10} {rr_symbol.size()+10}"', string_svg )
+                                    string_svg = re.sub(r'cx=\"\d*?.\d*"',f'cx="{(rr_symbol.size()+10)/2.0}"', string_svg )
+                                    string_svg = re.sub(r'cy=\"\d*?.\d*"',f'cy="{(rr_symbol.size()+10)/2.0}"', string_svg )
+                                    string_svg = re.sub(r'r=\"\d*?.\d*"',f'r="{(rr_symbol.size()+10)/2.0 - 0.5}"', string_svg )
+                                    string_svg = re.sub(r'fill=\"#.*?"',f'fill="{rr_symbol.color().name()}"', string_svg )
+                                    string_svg = re.sub(r'stroke=\"#.*?"',f'stroke="{rr_symbol.strokeColor().name()}"', string_svg )
+                                string_svg = urllib.parse.quote(string_svg)
+                                string_svg = "data:image/svg+xml;utf8," + string_svg
+                                rr_symbol_image = {"size": rr_symbol.size()+10,"type": rr_symbol_image_type, "imageString": string_svg}
+                                rr_values.append({"id":str(uuid.uuid4()),"value": f"{rr_value}", "alias": exp, "removeFromLegend": rfl, "symbol": {"stroke": rr_symbol_stroke, "fill": rr_symbol_fill, "image": rr_symbol_image}})
+                                f_index += 1
+                        def_type = {"stroke": {	"width": 1,	"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}},"image": {"size": 15,"type": "circle","imageString": "data:image/svg+xml;utf8,%3Csvg%20height%3D%2215%22%20width%3D%2215%22%20viewBox%3D%220%200%2015%2015%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%227.5%22%20cy%3D%227.5%22%20r%3D%227%22%20stroke%3D%22%23000000%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%22%22%20fill%3D%22%23869be4%22%3E%3C%2Fcircle%3E%3C%2Fsvg%3E"}}
+                        styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": rr_field, "symbolValueType": "Value", "values": rr_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
                 elif lyr_type == 1: #line
                     if lyr_style_type == "singleSymbol":
                         lyr_symbol = rend.symbol().symbolLayers()[0]
@@ -242,6 +308,28 @@ def _add_layer(self):
                             ran_values.append({"type": "Range","id":str(uuid.uuid4()),"minValue": f"{min_value}","maxValue": f"{max_value}", "alias": ran_alias, "symbol": {"stroke": lyr_symbol_stroke, "fill": lyr_symbol_fill}})
                         def_type = {"stroke": {"width": 1,"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}}}
                         styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": ran_field, "symbolValueType": "Range", "values": ran_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
+                    elif lyr_style_type ==  "RuleRenderer":
+                        rr_field = "_id"
+                        rr_values = []
+                        root_rule = rend.rootRule()
+                        all_rules = root_rule.children()
+                        all_symbols = root_rule.symbols()
+                        for i in range(len(all_rules)):
+                            exp = all_rules[i].filterExpression()
+                            rule_features = layer_to_add.getFeatures(exp)
+                            f_index = 0
+                            for f in rule_features:
+                                rfl = True
+                                if f_index == 0:
+                                    rfl = False
+                                rr_value = f.id()
+                                rr_symbol = all_symbols[i].symbolLayers()[0]
+                                lyr_symbol_fill = {"color": {"r": rr_symbol.color().red(),"g":  rr_symbol.color().green(),"b":  rr_symbol.color().blue(),"a":  rr_symbol.color().alpha()/255.0}}
+                                lyr_symbol_stroke =  {"width": rr_symbol.width(), "color": { "a": rr_symbol.color().alpha()/255.0, "r": rr_symbol.color().red(), "g": rr_symbol.color().green(), "b": rr_symbol.color().blue() }}
+                                rr_values.append({"type":"Value", "id":str(uuid.uuid4()),"value": f"{rr_value}", "alias": exp, "removeFromLegend": rfl, "symbol": {"stroke": lyr_symbol_stroke, "fill": lyr_symbol_fill}})
+                                f_index += 1
+                        def_type = {"stroke": {"width": 1,"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}}}
+                        styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": rr_field, "symbolValueType": "Value", "values": rr_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
                 elif lyr_type == 2: #polygon
                     if lyr_style_type == "singleSymbol":
                         lyr_symbol = rend.symbol().symbolLayers()[0]
@@ -276,7 +364,28 @@ def _add_layer(self):
                             ran_values.append({"type": "Range","id":str(uuid.uuid4()),"minValue": f"{min_value}","maxValue": f"{max_value}", "alias": ran_alias, "symbol": {"stroke": lyr_symbol_stroke, "fill": lyr_symbol_fill}})
                         def_type = {"stroke": {"width": 1,"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}, "type": "solid"}}
                         styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": ran_field, "symbolValueType": "Range", "values": ran_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
-
+                    elif lyr_style_type ==  "RuleRenderer":
+                        rr_field = "_id"
+                        rr_values = []
+                        root_rule = rend.rootRule()
+                        all_rules = root_rule.children()
+                        all_symbols = root_rule.symbols()
+                        for i in range(len(all_rules)):
+                            exp = all_rules[i].filterExpression()
+                            rule_features = layer_to_add.getFeatures(exp)
+                            f_index = 0
+                            for f in rule_features:
+                                rfl = True
+                                if f_index == 0:
+                                    rfl = False
+                                rr_value = f.id()
+                                rr_symbol = all_symbols[i].symbolLayers()[0]
+                                lyr_symbol_fill = {"color": {"r": rr_symbol.color().red(),"g":  rr_symbol.color().green(),"b":  rr_symbol.color().blue(),"a":  rr_symbol.color().alpha()/255.0},"type": "solid"}
+                                lyr_symbol_stroke =  {"width": rr_symbol.strokeWidth(), "color": { "a": rr_symbol.strokeColor().alpha()/255.0, "r": rr_symbol.strokeColor().red(), "g": rr_symbol.strokeColor().green(), "b": rr_symbol.strokeColor().blue() }}
+                                rr_values.append({"type": "Value", "id":str(uuid.uuid4()),"value": f"{rr_value}", "alias": exp, "removeFromLegend": rfl, "symbol": {"stroke": lyr_symbol_stroke, "fill": lyr_symbol_fill}})
+                                f_index += 1
+                        def_type = {"stroke": {"width": 1,"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}, "type": "solid"}}
+                        styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": rr_field, "symbolValueType": "Value", "values": rr_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
             req_body = {
                 "title": layer_name,
                 "tag": layer_tags_string,
