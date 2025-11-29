@@ -386,7 +386,7 @@ def _add_layer(self):
                                 f_index += 1
                         def_type = {"stroke": {"width": 1,"color": {"a": 1,"r": 0,"g": 0,"b": 0}},"fill": {"color": {"a": 1,"r": 134,"g": 155,"b": 228}, "type": "solid"}}
                         styleSttings = {"style": {"type":styleDict[lyr_style_type], "fieldName": rr_field, "symbolValueType": "Value", "values": rr_values, "defaultSymbol": def_type, "removeDefaultFromLegend": True}}
-            req_body = {
+            req_body = { 
                 "title": layer_name,
                 "tag": layer_tags_string,
                 "description": layer_description,
@@ -397,7 +397,7 @@ def _add_layer(self):
             }
 
         try:
-            req_add_layers = self.api.create_layer(req_body)
+            req_add_layers = self.api.create_layer(req_body) 
             if req_add_layers["code"] == 200:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Information)
@@ -427,7 +427,7 @@ def _add_layer(self):
         returnValue = msg.exec()
 
 # add layer button
-def _add_click(self):
+def _add_click(self): 
     self.dlg_add_layer.show()
     if self.dlg_add_layer.map_layers_cb.currentLayer() != None:
         self.dlg_add_layer.add_layer_button.setEnabled(True)

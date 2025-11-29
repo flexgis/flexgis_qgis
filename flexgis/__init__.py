@@ -37,6 +37,7 @@ from ..dialogs.flexgis_dialog import FlexgisQGISDialog
 from ..dialogs.flexgis_dialog_layers import FlexgisQGISDialogLayers
 from ..dialogs.flexgis_dialog_add_layer import FlexgisQGISDialogAddLayer
 from ..dialogs.flexgis_dialog_edit_layer import FlexgisQGISDialogEditLayer
+from ..dialogs.flexgis_dialog_ai import FlexgisQGISDialogAI
 
 import os
 from ..api import ApiClient
@@ -89,6 +90,9 @@ class FlexgisQGIS:
     from .remove_layer import _delete_layers, _del_click
     from .create_gpkg import _create_gpkg_from_layer, _clear_folder
     from .edit_layer import _edit_layer, _edit_click
+    from .export_layer import _export_click
+    from .geodata_ai import _ai_click, _ai_layer, _ai_inf
+    
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -312,6 +316,8 @@ class FlexgisQGIS:
             self.dlg_layers = FlexgisQGISDialogLayers()
             self.dlg_add_layer = FlexgisQGISDialogAddLayer()
             self.dlg_edit_layer = FlexgisQGISDialogEditLayer()
+            self.dlg_ai = FlexgisQGISDialogAI()
+            
         if self.dlg.isVisible():
             self.dlg.raise_()
             self.dlg.activateWindow()

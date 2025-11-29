@@ -31,6 +31,8 @@ def _log_in(self):
             self.dlg_layers.button_refresh.clicked.disconnect(self._refresh_click)
             self.dlg_layers.button_logout.clicked.disconnect(self._logout_click)
             self.dlg_layers.layer_table.itemSelectionChanged.disconnect(self._select_table_row)
+            self.dlg_layers.button_export.clicked.disconnect(self._export_click)
+            self.dlg_layers.button_ai.clicked.disconnect(self._ai_click)
         except TypeError:
             pass
         self.dlg_layers.username_label.setText(self.username)
@@ -80,6 +82,30 @@ def _log_in(self):
                 )
         self.dlg_layers.button_logout.setIcon(QIcon(imgPath_logout))
         self.dlg_layers.button_logout.setIconSize(QSize(25, 25))
+ 
+        imgPath_export = os.path.join(
+            root_path,
+                'icons',
+                'export.png',
+                )
+        self.dlg_layers.button_export.setIcon(QIcon(imgPath_export))
+        self.dlg_layers.button_export.setIconSize(QSize(25, 25))
+        
+        imgPath_ai = os.path.join(
+            root_path,
+                'icons',
+                'GeodataAI_FLEXGIS.png',
+                )
+        self.dlg_layers.button_ai.setIcon(QIcon(imgPath_ai))
+        self.dlg_layers.button_ai.setIconSize(QSize(25, 25))
+        
+        imgPath_info = os.path.join(
+            root_path,
+                'icons',
+                'flexgis.png',
+                )
+        self.dlg_ai.inf_button.setIcon(QIcon(imgPath_info))
+        self.dlg_ai.inf_button.setIconSize(QSize(25, 25))
 
         self.dlg_layers.button_add.clicked.connect(self._add_click)
         self.dlg_layers.button_delete.clicked.connect(self._del_click)
@@ -87,6 +113,9 @@ def _log_in(self):
         self.dlg_layers.button_refresh.clicked.connect(self._refresh_click)
         self.dlg_layers.button_logout.clicked.connect(self._logout_click)
         self.dlg_layers.layer_table.itemSelectionChanged.connect(self._select_table_row)
+
+        self.dlg_layers.button_export.clicked.connect(self._export_click)
+        self.dlg_layers.button_ai.clicked.connect(self._ai_click)
 
     except Exception as e:
         msg = QMessageBox()

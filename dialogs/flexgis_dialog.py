@@ -26,11 +26,17 @@ import os
 from pathlib import Path
 
 from qgis.PyQt import uic
+from qgis.PyQt import QtCore
 from qgis.PyQt import QtWidgets
 from PyQt5.QtGui import QPixmap, QIcon
 from qgis.PyQt.QtWidgets import (
     QLabel
 )
+
+from PyQt5.QtSvg import QSvgRenderer
+from PyQt5.QtGui import QPainter
+
+from PyQt5.QtCore import QRectF
 
 from ..constants import (
     AUTH_STYLE
@@ -44,6 +50,10 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class FlexgisQGISDialog(QtWidgets.QDialog, FORM_CLASS):
+    
+    BANNER_WIDTH_PIXELS = 541
+    BANNER_HEIGHT_PIXELS = 282 
+    
     def __init__(self, parent=None):
         """Constructor."""
         super(FlexgisQGISDialog, self).__init__(parent)
@@ -67,34 +77,35 @@ class FlexgisQGISDialog(QtWidgets.QDialog, FORM_CLASS):
         icon.addPixmap(wtPixmap)
         self.setWindowIcon(icon)
 
-        imgPath_banner = os.path.join(
-            root_path,
-            'icons',
-            'header_banner.jpeg',
-            )
-        self.pixmap_banner = QPixmap(imgPath_banner)
-        
-        self.label_banner = QLabel(self)
-        self.label_banner.setPixmap(self.pixmap_banner)
-        self.label_banner.resize(self.pixmap_banner.width(),
-                          self.pixmap_banner.height())
-        self.label_banner.move(0, -10)
-
-        imgPath_logo = os.path.join(
-            root_path,
-            'icons',
-            'logo.png',
-            )
-        self.pixmap_logo = QPixmap(imgPath_logo)
-        
-        self.label_logo = QLabel(self)
-        self.label_logo.setPixmap(self.pixmap_logo)
-        self.label_logo.resize(self.pixmap_logo.width(),
-                          self.pixmap_logo.height())
-        self.label_logo.move(-20, -20)
-        # self.label.setStyleSheet("font-size: 72px;font-weight:bold; color:black; background-color:rgba(0,0,0,.0)")
-        self.label_logo.setStyleSheet("background-color:rgba(0,0,0,.0)")
-        # print(AUTH_STYLE)
         self.setStyleSheet(AUTH_STYLE)
-        
+
         self.setupUi(self)
+        
+        self.png_path = os.path.join(root_path, 'icons', 'background.png')
+        
+        self.svg_path2 = os.path.join(root_path, 'icons', 'flexgis.svg')
+        self.svg_renderer2 = QSvgRenderer(self.svg_path2)
+        
+        
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        try:
+            painter = QPainter(self)
+            painter.setRenderHint(QPainter.Antialiasing, True)                
+            if os.path.exists(self.png_path):
+                png_pixmap = QPixmap(self.png_path)
+                if not png_pixmap.isNull():
+                    scaled_pixmap = png_pixmap.scaled(
+                        541,
+                        282,
+                        QtCore.Qt.KeepAspectRatioByExpanding,
+                        QtCore.Qt.SmoothTransformation
+                    )
+                    painter.drawPixmap(0, 0, scaled_pixmap)                 
+            if self.svg_renderer2.isValid():
+                rect_f2 = QRectF(self.rect())
+                self.svg_renderer2.render(painter, rect_f2)
+        except Exception as e:
+            print(f"Ошибка при отрисовке SVG: {e}")
+        finally:
+            painter.end()

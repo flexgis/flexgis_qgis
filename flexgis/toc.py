@@ -63,11 +63,14 @@ def _select_table_row(self):
         self.dlg_layers.button_delete.setEnabled(True)
         if len(self.selected_rows_indexes) == 1:
             self.dlg_layers.button_edit.setEnabled(True)
+            self.dlg_layers.button_export.setEnabled(True)
         else:
             self.dlg_layers.button_edit.setEnabled(False)
+            self.dlg_layers.button_export.setEnabled(False)
     else:
         self.dlg_layers.button_delete.setEnabled(False)
         self.dlg_layers.button_edit.setEnabled(False)
+        self.dlg_layers.button_export.setEnabled(False)
 
 
 # refresh layers table

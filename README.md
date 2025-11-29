@@ -2,4 +2,4 @@
 
 <h5>Manage your vector and raster layers on FlexGIS platform<br/><br />
 
-You can add, edit and remove all data in your FlexGIS Data Sources</h5>
+You can upload, add, edit and remove all data in your FlexGIS Data Sources</h5>

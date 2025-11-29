@@ -263,6 +263,7 @@
     <string>Обновить</string>
    </property>
   </widget>
+
   <widget class="QCheckBox" name="checkBox_update_geom">
    <property name="geometry">
     <rect>

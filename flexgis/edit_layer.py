@@ -27,7 +27,7 @@ def _edit_layer(self):
             layer_tags_string = layer_tags_string[:0] + "[" + layer_tags_string[0:-1] + "]"
 
             req_body["title"] = layer_name
-            req_body["tag"] = layer_tags_string
+            req_body["tag"] = layer_tags_string 
             req_body["description"] = layer_description
         else:
             msg = QMessageBox()
@@ -91,7 +91,7 @@ def _edit_layer(self):
 # edit layer button
 def _edit_click(self):
     self.dlg_edit_layer.show()
-    selectedIndex = self.selected_rows_indexes[0]
+    selectedIndex = self.selected_rows_indexes[0] 
     user_layer = self.user_layers[selectedIndex]
     self.dlg_edit_layer.text_name.setText(user_layer["title"])
     self.dlg_edit_layer.text_description.setText(user_layer["description"])
